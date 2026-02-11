@@ -23,6 +23,7 @@ node scripts/place-bid.js <amount_in_eth>
 
 - **Token Contract**: `0x10a5676ec8ae3d6b1f36a6f1a1526136ba7938bf`
 - **Auction House**: `0x0D2790f4831bDFd6a8Fd21C6f591bB69496b5e91`
+- **Governor**: `0x1b20dcfdf520176cfab22888f07ea3419d15779d`
 - **Network**: Base (Chain ID: 8453)
 - **RPC**: `https://mainnet.base.org`
 
@@ -42,6 +43,39 @@ node scripts/place-bid.js <amount_in_eth>
 4. **Call `createBid(tokenId)`** - Send bid amount as `value`
 
 **Important**: The auction house contract returns your previous bid if you're outbid or if you increase your bid. You only pay the difference.
+
+## Governance
+
+Each BASED DAO NFT = 1 vote. NFT holders can vote on proposals that govern the treasury and protocol.
+
+**Check active proposals:**
+```bash
+node scripts/check-proposals.js        # Active only
+node scripts/check-proposals.js --all  # All proposals
+```
+
+**Vote on a proposal:**
+```bash
+export PRIVATE_KEY=0x...
+node scripts/vote.js <proposal_id> <support>
+# Support: 0 = Against, 1 = For, 2 = Abstain
+```
+
+**Example:**
+```bash
+node scripts/vote.js 5 1  # Vote FOR proposal #5
+```
+
+### Governance Parameters
+
+- **Voting Delay**: 1 day after proposal creation
+- **Voting Period**: 4 days
+- **Proposal Threshold**: 4 NFTs required to create proposals
+- **Quorum**: Varies per proposal
+
+### Delegation
+
+To vote, your NFTs must be delegated (usually to yourself). Check delegation status on the DAO website.
 
 ## Scripts
 
@@ -69,6 +103,36 @@ Places a bid on the current auction. Requires:
 ```bash
 export PRIVATE_KEY=0x...
 node scripts/place-bid.js 0.0009
+```
+
+### check-proposals.js
+
+Returns governance proposal status:
+- Proposal ID and state
+- Vote counts (for/against/abstain)
+- Time remaining for active proposals
+- Voting parameters
+
+**Usage:**
+```bash
+node scripts/check-proposals.js        # Active proposals only
+node scripts/check-proposals.js --all  # All proposals
+```
+
+### vote.js
+
+Casts a vote on an active proposal. Requires:
+- Private key (via environment variable)
+- Proposal ID
+- Support (0=Against, 1=For, 2=Abstain)
+- Optional reason
+
+**Usage:**
+```bash
+export PRIVATE_KEY=0x...
+node scripts/vote.js 5 1                    # Vote FOR
+node scripts/vote.js 5 0                    # Vote AGAINST
+node scripts/vote.js 5 2 "No strong opinion"  # ABSTAIN with reason
 ```
 
 ## Auction Timeline
